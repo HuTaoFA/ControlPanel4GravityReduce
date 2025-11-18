@@ -436,6 +436,41 @@ function initializeCommandButtons() {
     });
 }
 
+// Handle PLC command acknowledgment
+function handleCommandAcknowledgment(acknowledgedCommand) {
+    // Axis movement commands (joystick/slider): 7-12
+    const isAxisMovementCommand = acknowledgedCommand >= COMMANDS.X_PLUS &&
+                                   acknowledgedCommand <= COMMANDS.Z_MINUS;
+
+    if (isAxisMovementCommand) {
+        // For axis movement, just highlight the current inputting widget
+        // The joystick/slider is already highlighted, so we don't need to do anything
+        // Just log the acknowledgment
+        addLog(`PLC acknowledged: ${getCommandName(acknowledgedCommand)}`, 'info');
+    } else {
+        // For button commands, clear the highlight and reset command
+        const commandButtons = document.querySelectorAll('.btn-command');
+        commandButtons.forEach(btn => btn.classList.remove('active-command'));
+
+        // Reset current command to zero
+        currentCommand = 0;
+
+        // Update int-9 display
+        const commandInput = document.getElementById('int-9');
+        if (commandInput) {
+            commandInput.value = 0;
+        }
+
+        // Update current command display
+        const cmdDisplay = document.getElementById('current-cmd-display');
+        if (cmdDisplay) {
+            cmdDisplay.textContent = '0 - None';
+        }
+
+        addLog(`PLC acknowledged and completed: ${getCommandName(acknowledgedCommand)}`, 'success');
+    }
+}
+
 // Listen for connection status updates
 window.electronAPI.onConnectionStatus((data) => {
     if (data.connected) {
@@ -501,6 +536,12 @@ window.electronAPI.onDataReceived((data) => {
                 }
             }
         });
+
+        // Handle PLC command acknowledgment (10th int, index 9)
+        const plcAcknowledgedCommand = data.ints[9];
+        if (plcAcknowledgedCommand !== 0 && plcAcknowledgedCommand === currentCommand) {
+            handleCommandAcknowledgment(plcAcknowledgedCommand);
+        }
     }
 });
 

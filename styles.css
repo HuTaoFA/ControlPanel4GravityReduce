@@ -1,3 +1,124 @@
+/* CSS Variables for Theme Support */
+:root {
+    /* Dark Theme (Default) */
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #252526;
+    --bg-tertiary: #2d2d30;
+    --bg-quaternary: #323233;
+    --bg-input: #3c3c3c;
+    --bg-hover: #2a2d2e;
+
+    --border-primary: #3c3c3c;
+    --border-secondary: #454545;
+
+    --text-primary: #cccccc;
+    --text-secondary: #858585;
+    --text-tertiary: #969696;
+    --text-bright: #ffffff;
+    --text-muted: #d4d4d4;
+
+    --accent-primary: #007acc;
+    --accent-primary-hover: #1177bb;
+    --accent-primary-dark: #0e639c;
+
+    --success-bg: #1a3d1a;
+    --success-text: #89d185;
+    --success-border: #14892c;
+    --success-button: #16825d;
+    --success-button-hover: #1a9e6c;
+
+    --error-bg: #5a1d1d;
+    --error-text: #f48771;
+    --error-border: #be1100;
+
+    --warning-bg: #5a3d1a;
+    --warning-text: #f0ad4e;
+    --warning-border: #c27d1a;
+    --warning-button: #c27d1a;
+    --warning-button-hover: #d68d1f;
+
+    --danger-button: #a1260d;
+    --danger-button-hover: #c9302c;
+
+    --secondary-button: #d73a49;
+    --secondary-button-hover: #cb2431;
+
+    --info-text: #4fc1ff;
+
+    --send-button: #28a745;
+    --send-button-hover: #218838;
+
+    --debug-button: #6c757d;
+    --debug-button-hover: #5a6268;
+
+    --scrollbar-track: #2d2d2d;
+    --scrollbar-thumb: #424242;
+    --scrollbar-thumb-hover: #4e4e4e;
+
+    --titlebar-close-hover: #e81123;
+    --titlebar-hover: rgba(255, 255, 255, 0.1);
+}
+
+/* Bright Theme */
+:root.bright-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-tertiary: #e8e8e8;
+    --bg-quaternary: #d0d0d0;
+    --bg-input: #e0e0e0;
+    --bg-hover: #d8d8d8;
+
+    --border-primary: #c0c0c0;
+    --border-secondary: #b0b0b0;
+
+    --text-primary: #2d2d2d;
+    --text-secondary: #666666;
+    --text-tertiary: #888888;
+    --text-bright: #000000;
+    --text-muted: #404040;
+
+    --accent-primary: #0078d4;
+    --accent-primary-hover: #106ebe;
+    --accent-primary-dark: #005a9e;
+
+    --success-bg: #dff6dd;
+    --success-text: #107c10;
+    --success-border: #0b6a0b;
+    --success-button: #107c10;
+    --success-button-hover: #0b6a0b;
+
+    --error-bg: #fde7e9;
+    --error-text: #c42b1c;
+    --error-border: #a80000;
+
+    --warning-bg: #fff4ce;
+    --warning-text: #8a6d00;
+    --warning-border: #d29200;
+    --warning-button: #d29200;
+    --warning-button-hover: #b87f00;
+
+    --danger-button: #d13438;
+    --danger-button-hover: #a52a2e;
+
+    --secondary-button: #e3576c;
+    --secondary-button-hover: #c74458;
+
+    --info-text: #0078d4;
+
+    --send-button: #107c10;
+    --send-button-hover: #0b6a0b;
+
+    --debug-button: #8a8886;
+    --debug-button-hover: #6d6d6d;
+
+    --scrollbar-track: #e0e0e0;
+    --scrollbar-thumb: #c0c0c0;
+    --scrollbar-thumb-hover: #a0a0a0;
+
+    --titlebar-close-hover: #e81123;
+    --titlebar-hover: rgba(0, 0, 0, 0.05);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,10 +127,11 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #1e1e1e;
-    color: #cccccc;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     padding: 0;
     overflow: hidden;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* Custom Titlebar - VS Code Style */
@@ -18,10 +140,11 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 30px;
-    background: #323233;
-    color: #cccccc;
+    background: var(--bg-quaternary);
+    color: var(--text-primary);
     user-select: none;
     -webkit-app-region: drag;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .titlebar-drag-region {
@@ -34,7 +157,8 @@ body {
 .titlebar-title {
     font-size: 12px;
     margin-left: 10px;
-    color: #cccccc;
+    color: var(--text-primary);
+    transition: color 0.3s;
 }
 
 .titlebar-controls {
@@ -48,20 +172,20 @@ body {
     height: 30px;
     background: transparent;
     border: none;
-    color: #cccccc;
+    color: var(--text-primary);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.1s;
+    transition: background-color 0.1s, color 0.3s;
 }
 
 .titlebar-button:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--titlebar-hover);
 }
 
 .titlebar-button.titlebar-close:hover {
-    background: #e81123;
+    background: var(--titlebar-close-hover);
     color: white;
 }
 
@@ -73,9 +197,10 @@ body {
     max-width: 100%;
     height: calc(100vh - 30px);
     margin: 0;
-    background: #252526;
+    background: var(--bg-secondary);
     padding: 20px;
     overflow-y: auto;
+    transition: background-color 0.3s;
 }
 
 /* Status Bar */
@@ -84,16 +209,18 @@ body {
     align-items: center;
     gap: 15px;
     padding: 8px 15px;
-    background: #1e1e1e;
-    border: 1px solid #3c3c3c;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
     border-radius: 3px;
     margin-bottom: 15px;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .status-label {
     font-size: 12px;
     font-weight: 400;
-    color: #858585;
+    color: var(--text-secondary);
+    transition: color 0.3s;
 }
 
 .auto-send-controls {
@@ -126,22 +253,23 @@ body {
 
 h1 {
     text-align: center;
-    color: #cccccc;
+    color: var(--text-primary);
     margin-bottom: 0;
     font-size: 2em;
     font-weight: 400;
+    transition: color 0.3s;
 }
 
 .btn-settings {
     margin-left: auto;
-    background: #3c3c3c;
-    color: #cccccc;
+    background: var(--bg-input);
+    color: var(--text-primary);
     border: none;
-    border-right: 1px solid #3c3c3c;
+    border-right: 1px solid var(--border-primary);
     padding: 10px 20px;
     font-size: 13px;
     cursor: pointer;
-    transition: background-color 0.1s, color 0.1s;
+    transition: background-color 0.3s, color 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -149,8 +277,8 @@ h1 {
 }
 
 .btn-settings:hover {
-    background: #2a2d2e;
-    color: #cccccc;
+    background: var(--bg-hover);
+    color: var(--text-primary);
 }
 
 /* Tab Navigation - VS Code Style */
@@ -158,32 +286,33 @@ h1 {
     display: flex;
     gap: 0;
     margin-bottom: 0;
-    border-bottom: 1px solid #3c3c3c;
-    background: #2d2d30;
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--bg-tertiary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .tab-button {
     padding: 10px 20px;
     background: transparent;
     border: none;
-    border-right: 1px solid #3c3c3c;
+    border-right: 1px solid var(--border-primary);
     font-size: 13px;
     font-weight: 400;
-    color: #969696;
+    color: var(--text-tertiary);
     cursor: pointer;
-    transition: background-color 0.1s, color 0.1s;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
     position: relative;
 }
 
 .tab-button:hover {
-    background: #2a2d2e;
-    color: #cccccc;
+    background: var(--bg-hover);
+    color: var(--text-primary);
 }
 
 .tab-button.active {
-    background: #252526;
-    color: #ffffff;
-    border-bottom: 2px solid #007acc;
+    background: var(--bg-secondary);
+    color: var(--text-bright);
+    border-bottom: 2px solid var(--accent-primary);
 }
 
 /* Tab Content */
@@ -202,27 +331,30 @@ h1 {
 }
 
 h2 {
-    color: #cccccc;
+    color: var(--text-primary);
     margin-bottom: 15px;
     font-size: 1.3em;
     font-weight: 400;
-    border-bottom: 1px solid #3c3c3c;
+    border-bottom: 1px solid var(--border-primary);
     padding-bottom: 10px;
+    transition: color 0.3s, border-color 0.3s;
 }
 
 h3 {
-    color: #cccccc;
+    color: var(--text-primary);
     margin-bottom: 10px;
     font-size: 1.1em;
     font-weight: 400;
+    transition: color 0.3s;
 }
 
 .section {
     margin-bottom: 15px;
     padding: 15px;
-    background: #1e1e1e;
+    background: var(--bg-primary);
     border-radius: 3px;
-    border: 1px solid #3c3c3c;
+    border: 1px solid var(--border-primary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .tab-content .section:first-child {
@@ -249,40 +381,41 @@ h3 {
 
 .input-group label {
     font-weight: 400;
-    color: #cccccc;
+    color: var(--text-primary);
+    transition: color 0.3s;
 }
 
 .input-group input {
     padding: 6px 10px;
-    border: 1px solid #3c3c3c;
+    border: 1px solid var(--border-primary);
     border-radius: 2px;
     font-size: 13px;
-    background: #3c3c3c;
-    color: #cccccc;
-    transition: border-color 0.1s;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: #007acc;
-    background: #1e1e1e;
+    border-color: var(--accent-primary);
+    background: var(--bg-primary);
 }
 
 /* Buttons */
 .btn {
     padding: 8px 16px;
-    border: 1px solid #454545;
+    border: 1px solid var(--border-secondary);
     border-radius: 2px;
     font-size: 13px;
     font-weight: 400;
     cursor: pointer;
-    transition: background-color 0.1s;
-    background: #0e639c;
+    transition: background-color 0.3s, border-color 0.3s;
+    background: var(--accent-primary-dark);
     color: #ffffff;
 }
 
 .btn:hover {
-    background: #1177bb;
+    background: var(--accent-primary-hover);
 }
 
 .btn:disabled {
@@ -291,25 +424,25 @@ h3 {
 }
 
 .btn-primary {
-    background: #0e639c;
+    background: var(--accent-primary-dark);
     color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #1177bb;
+    background: var(--accent-primary-hover);
 }
 
 .btn-secondary {
-    background: #d73a49;
+    background: var(--secondary-button);
     color: white;
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background: #cb2431;
+    background: var(--secondary-button-hover);
 }
 
 .btn-send {
-    background: #28a745;
+    background: var(--send-button);
     color: white;
     margin-top: 10px;
     font-size: 13px;
@@ -317,11 +450,11 @@ h3 {
 }
 
 .btn-send:hover:not(:disabled) {
-    background: #218838;
+    background: var(--send-button-hover);
 }
 
 .btn-debug {
-    background: #6c757d;
+    background: var(--debug-button);
     color: white;
     margin-top: 10px;
     font-size: 13px;
@@ -329,7 +462,7 @@ h3 {
 }
 
 .btn-debug:hover:not(:disabled) {
-    background: #5a6268;
+    background: var(--debug-button-hover);
 }
 
 /* Status Indicator */
@@ -339,18 +472,19 @@ h3 {
     border-radius: 2px;
     font-weight: 400;
     font-size: 12px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .status-disconnected {
-    background: #5a1d1d;
-    color: #f48771;
-    border: 1px solid #be1100;
+    background: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid var(--error-border);
 }
 
 .status-connected {
-    background: #1a3d1a;
-    color: #89d185;
-    border: 1px solid #14892c;
+    background: var(--success-bg);
+    color: var(--success-text);
+    border: 1px solid var(--success-border);
 }
 
 /* Auto-Send Indicator */
@@ -358,14 +492,16 @@ h3 {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #3c3c3c;
+    background: var(--bg-input);
     padding: 6px 12px;
     border-radius: 2px;
-    border: 1px solid #454545;
+    border: 1px solid var(--border-secondary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .auto-send-group strong {
-    color: #cccccc;
+    color: var(--text-primary);
+    transition: color 0.3s;
 }
 
 .auto-send-indicator {
@@ -373,15 +509,16 @@ h3 {
     border-radius: 2px;
     font-weight: 400;
     font-size: 11px;
-    background: #5a1d1d;
-    color: #f48771;
+    background: var(--error-bg);
+    color: var(--error-text);
     min-width: 40px;
     text-align: center;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .auto-send-indicator.active {
-    background: #1a3d1a;
-    color: #89d185;
+    background: var(--success-bg);
+    color: var(--success-text);
     animation: pulse 1s infinite;
 }
 
@@ -399,18 +536,20 @@ h3 {
 }
 
 .control-group {
-    background: #2d2d30;
+    background: var(--bg-tertiary);
     padding: 12px;
     border-radius: 3px;
-    border: 1px solid #3c3c3c;
+    border: 1px solid var(--border-primary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .control-group h3 {
-    color: #cccccc;
+    color: var(--text-primary);
     margin-bottom: 10px;
     font-size: 1em;
-    border-bottom: 1px solid #3c3c3c;
+    border-bottom: 1px solid var(--border-primary);
     padding-bottom: 6px;
+    transition: color 0.3s, border-color 0.3s;
 }
 
 /* Integers Grid for Sending */
@@ -431,38 +570,40 @@ h3 {
 
 .integer-input label {
     font-weight: 400;
-    color: #cccccc;
+    color: var(--text-primary);
     font-size: 12px;
     min-width: 120px;
+    transition: color 0.3s;
 }
 
 .integer-input input {
     padding: 5px 8px;
-    border: 1px solid #3c3c3c;
+    border: 1px solid var(--border-primary);
     border-radius: 2px;
     font-size: 13px;
-    background: #3c3c3c;
-    color: #cccccc;
-    transition: border-color 0.1s;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
     max-width: 100px;
     width: 100px;
 }
 
 .integer-input input:focus {
     outline: none;
-    border-color: #007acc;
-    background: #1e1e1e;
+    border-color: var(--accent-primary);
+    background: var(--bg-primary);
 }
 
 .unit-hint {
     font-size: 11px;
-    color: #858585;
+    color: var(--text-secondary);
     font-weight: 400;
     min-width: 50px;
     text-align: center;
-    background: #3c3c3c;
+    background: var(--bg-input);
     padding: 4px 8px;
     border-radius: 2px;
+    transition: color 0.3s, background-color 0.3s;
 }
 
 /* Boolean Display Grid */
@@ -478,8 +619,8 @@ h3 {
     border-radius: 2px;
     font-weight: 400;
     font-size: 10px;
-    border: 1px solid #3c3c3c;
-    transition: all 0.1s;
+    border: 1px solid var(--border-primary);
+    transition: all 0.3s;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -501,14 +642,14 @@ h3 {
 }
 
 .bool-item.bool-false {
-    background: #3c3c3c;
-    color: #858585;
+    background: var(--bg-input);
+    color: var(--text-secondary);
 }
 
 .bool-item.bool-true {
-    background: #1a3d1a;
-    color: #89d185;
-    border-color: #14892c;
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: var(--success-border);
 }
 
 /* Integer Display Grid */
@@ -520,57 +661,62 @@ h3 {
 
 .int-item {
     padding: 12px;
-    background: #2d2d30;
-    border: 1px solid #3c3c3c;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
     border-radius: 2px;
     text-align: center;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .int-item-label {
     font-size: 11px;
-    color: #858585;
+    color: var(--text-secondary);
     font-weight: 400;
     margin-bottom: 6px;
+    transition: color 0.3s;
 }
 
 .int-item-value {
     font-size: 20px;
-    color: #4fc1ff;
+    color: var(--info-text);
     font-weight: 600;
+    transition: color 0.3s;
 }
 
 /* Log Section */
 .log-container {
-    background: #1e1e1e;
-    color: #d4d4d4;
+    background: var(--bg-primary);
+    color: var(--text-muted);
     padding: 15px;
     border-radius: 5px;
     font-family: 'Courier New', monospace;
     font-size: 12px;
     max-height: 200px;
     overflow-y: auto;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .log-entry {
     margin-bottom: 5px;
     padding: 5px;
-    border-left: 2px solid #007acc;
+    border-left: 2px solid var(--accent-primary);
     padding-left: 10px;
+    transition: border-left-color 0.3s, color 0.3s;
 }
 
 .log-entry.error {
-    border-left-color: #f48771;
-    color: #f48771;
+    border-left-color: var(--error-text);
+    color: var(--error-text);
 }
 
 .log-entry.success {
-    border-left-color: #89d185;
-    color: #89d185;
+    border-left-color: var(--success-text);
+    color: var(--success-text);
 }
 
 .log-entry.info {
-    border-left-color: #4fc1ff;
-    color: #4fc1ff;
+    border-left-color: var(--info-text);
+    color: var(--info-text);
 }
 
 /* Scrollbar Styling */
@@ -579,34 +725,36 @@ h3 {
 }
 
 .log-container::-webkit-scrollbar-track {
-    background: #2d2d2d;
+    background: var(--scrollbar-track);
 }
 
 .log-container::-webkit-scrollbar-thumb {
-    background: #424242;
+    background: var(--scrollbar-thumb);
     border-radius: 4px;
 }
 
 .log-container::-webkit-scrollbar-thumb:hover {
-    background: #4e4e4e;
+    background: var(--scrollbar-thumb-hover);
 }
 
 /* Command Groups */
 .command-group {
     margin-bottom: 20px;
-    background: #1e1e1e;
+    background: var(--bg-primary);
     padding: 15px;
     border-radius: 3px;
-    border: 1px solid #3c3c3c;
+    border: 1px solid var(--border-primary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .command-group h3 {
-    color: #cccccc;
+    color: var(--text-primary);
     margin-bottom: 12px;
     font-size: 1.1em;
     font-weight: 400;
-    border-bottom: 1px solid #3c3c3c;
+    border-bottom: 1px solid var(--border-primary);
     padding-bottom: 6px;
+    transition: color 0.3s, border-color 0.3s;
 }
 
 .commands-grid-group {
@@ -617,20 +765,22 @@ h3 {
 
 /* Current Command Display */
 .current-command-display {
-    background: #1e1e1e;
-    border: 1px solid #3c3c3c;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
     border-radius: 2px;
     padding: 12px;
     margin-bottom: 15px;
     font-size: 14px;
     font-weight: 400;
-    color: #cccccc;
+    color: var(--text-primary);
     text-align: center;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .current-command-display span {
-    color: #4fc1ff;
+    color: var(--info-text);
     font-weight: 600;
+    transition: color 0.3s;
 }
 
 /* Command Buttons Grid */
@@ -641,51 +791,51 @@ h3 {
 }
 
 .btn-command {
-    background: #0e639c;
+    background: var(--accent-primary-dark);
     color: white;
     padding: 10px 8px;
     font-size: 12px;
     min-height: 45px;
     position: relative;
-    transition: background-color 0.1s;
+    transition: background-color 0.3s;
 }
 
 .btn-command:hover:not(:disabled) {
-    background: #1177bb;
+    background: var(--accent-primary-hover);
 }
 
 .btn-command.active-command {
-    background: #16825d;
-    border: 2px solid #14892c;
+    background: var(--success-button);
+    border: 2px solid var(--success-border);
 }
 
 .btn-command.active-command:hover:not(:disabled) {
-    background: #1a9e6c;
+    background: var(--success-button-hover);
 }
 
 .btn-command.btn-start {
-    background: #16825d;
+    background: var(--success-button);
 }
 
 .btn-command.btn-start:hover:not(:disabled) {
-    background: #1a9e6c;
+    background: var(--success-button-hover);
 }
 
 .btn-command.btn-stop {
-    background: #c27d1a;
+    background: var(--warning-button);
 }
 
 .btn-command.btn-stop:hover:not(:disabled) {
-    background: #d68d1f;
+    background: var(--warning-button-hover);
 }
 
 .btn-command.btn-emergency {
-    background: #a1260d;
+    background: var(--danger-button);
     font-weight: 600;
 }
 
 .btn-command.btn-emergency:hover:not(:disabled) {
-    background: #c9302c;
+    background: var(--danger-button-hover);
 }
 
 /* Axis Control Warning */
@@ -693,14 +843,15 @@ h3 {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #5a3d1a;
-    border: 1px solid #c27d1a;
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
     border-radius: 3px;
     padding: 10px 15px;
     margin-bottom: 15px;
-    color: #f0ad4e;
+    color: var(--warning-text);
     font-size: 13px;
     font-weight: 400;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .warning-icon {
@@ -721,17 +872,19 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #2d2d30;
+    background: var(--bg-tertiary);
     padding: 20px;
     border-radius: 5px;
-    border: 1px solid #3c3c3c;
+    border: 1px solid var(--border-primary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .joystick-container h4 {
-    color: #cccccc;
+    color: var(--text-primary);
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 15px;
+    transition: color 0.3s;
 }
 
 .joystick-wrapper {
@@ -744,8 +897,9 @@ h3 {
 #joystick-canvas {
     cursor: pointer;
     border-radius: 50%;
-    background: #1e1e1e;
-    border: 2px solid #3c3c3c;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-primary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 #joystick-canvas:disabled {
@@ -766,7 +920,8 @@ h3 {
     position: absolute;
     font-size: 12px;
     font-weight: 600;
-    color: #858585;
+    color: var(--text-secondary);
+    transition: color 0.3s;
 }
 
 .label-top {
@@ -795,19 +950,20 @@ h3 {
 
 .joystick-status {
     padding: 6px 12px;
-    background: #1e1e1e;
-    border: 1px solid #3c3c3c;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
     border-radius: 3px;
     font-size: 12px;
-    color: #858585;
+    color: var(--text-secondary);
     min-width: 120px;
     text-align: center;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .joystick-status.active {
-    background: #1a3d1a;
-    border-color: #14892c;
-    color: #89d185;
+    background: var(--success-bg);
+    border-color: var(--success-border);
+    color: var(--success-text);
 }
 
 /* Z Slider Container */
@@ -815,17 +971,19 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #2d2d30;
+    background: var(--bg-tertiary);
     padding: 20px;
     border-radius: 5px;
-    border: 1px solid #3c3c3c;
+    border: 1px solid var(--border-primary);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .slider-container h4 {
-    color: #cccccc;
+    color: var(--text-primary);
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 15px;
+    transition: color 0.3s;
 }
 
 .slider-wrapper {
@@ -840,7 +998,8 @@ h3 {
 .slider-label-bottom {
     font-size: 12px;
     font-weight: 600;
-    color: #858585;
+    color: var(--text-secondary);
+    transition: color 0.3s;
 }
 
 .z-slider {
@@ -848,11 +1007,12 @@ h3 {
     writing-mode: bt-lr;
     width: 40px;
     height: 200px;
-    background: #1e1e1e;
-    border: 2px solid #3c3c3c;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-primary);
     border-radius: 20px;
     outline: none;
     cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .z-slider:disabled {
@@ -865,54 +1025,55 @@ h3 {
     appearance: none;
     width: 36px;
     height: 36px;
-    background: #0e639c;
+    background: var(--accent-primary-dark);
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid #007acc;
-    transition: background 0.1s;
+    border: 2px solid var(--accent-primary);
+    transition: background 0.3s;
 }
 
 .z-slider::-webkit-slider-thumb:hover {
-    background: #1177bb;
+    background: var(--accent-primary-hover);
 }
 
 .z-slider::-webkit-slider-thumb:active {
-    background: #16825d;
-    border-color: #14892c;
+    background: var(--success-button);
+    border-color: var(--success-border);
 }
 
 .z-slider::-moz-range-thumb {
     width: 36px;
     height: 36px;
-    background: #0e639c;
+    background: var(--accent-primary-dark);
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid #007acc;
-    transition: background 0.1s;
+    border: 2px solid var(--accent-primary);
+    transition: background 0.3s;
 }
 
 .z-slider::-moz-range-thumb:hover {
-    background: #1177bb;
+    background: var(--accent-primary-hover);
 }
 
 .z-slider::-moz-range-thumb:active {
-    background: #16825d;
-    border-color: #14892c;
+    background: var(--success-button);
+    border-color: var(--success-border);
 }
 
 .slider-status {
     padding: 6px 12px;
-    background: #1e1e1e;
-    border: 1px solid #3c3c3c;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
     border-radius: 3px;
     font-size: 12px;
-    color: #858585;
+    color: var(--text-secondary);
     min-width: 120px;
     text-align: center;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .slider-status.active {
-    background: #1a3d1a;
-    border-color: #14892c;
-    color: #89d185;
+    background: var(--success-bg);
+    border-color: var(--success-border);
+    color: var(--success-text);
 }

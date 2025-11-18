@@ -684,26 +684,29 @@ function drawJoystick() {
     // Clear canvas
     joystickCtx.clearRect(0, 0, joystickCanvas.width, joystickCanvas.height);
 
+    // Get CSS variable colors for theme support
+    const getCSSVar = (varName) => getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+
     // Draw outer circle (base)
     joystickCtx.beginPath();
     joystickCtx.arc(centerX, centerY, JOYSTICK_RADIUS, 0, 2 * Math.PI);
-    joystickCtx.fillStyle = '#1e1e1e';
+    joystickCtx.fillStyle = getCSSVar('--bg-primary');
     joystickCtx.fill();
-    joystickCtx.strokeStyle = '#3c3c3c';
+    joystickCtx.strokeStyle = getCSSVar('--border-primary');
     joystickCtx.lineWidth = 2;
     joystickCtx.stroke();
 
     // Draw deadzone circle
     joystickCtx.beginPath();
     joystickCtx.arc(centerX, centerY, JOYSTICK_RADIUS * JOYSTICK_DEADZONE, 0, 2 * Math.PI);
-    joystickCtx.fillStyle = '#2d2d30';
+    joystickCtx.fillStyle = getCSSVar('--bg-tertiary');
     joystickCtx.fill();
-    joystickCtx.strokeStyle = '#454545';
+    joystickCtx.strokeStyle = getCSSVar('--border-secondary');
     joystickCtx.lineWidth = 1;
     joystickCtx.stroke();
 
     // Draw crosshair
-    joystickCtx.strokeStyle = '#454545';
+    joystickCtx.strokeStyle = getCSSVar('--border-secondary');
     joystickCtx.lineWidth = 1;
     joystickCtx.beginPath();
     joystickCtx.moveTo(centerX, centerY - JOYSTICK_RADIUS);
@@ -723,7 +726,7 @@ function drawJoystick() {
         joystickCtx.beginPath();
         joystickCtx.moveTo(centerX, centerY);
         joystickCtx.lineTo(handleX, handleY);
-        joystickCtx.strokeStyle = '#007acc';
+        joystickCtx.strokeStyle = getCSSVar('--accent-primary');
         joystickCtx.lineWidth = 2;
         joystickCtx.stroke();
     }
@@ -731,9 +734,9 @@ function drawJoystick() {
     // Draw handle (joystick knob)
     joystickCtx.beginPath();
     joystickCtx.arc(handleX, handleY, JOYSTICK_HANDLE_RADIUS, 0, 2 * Math.PI);
-    joystickCtx.fillStyle = isJoystickActive ? '#16825d' : '#0e639c';
+    joystickCtx.fillStyle = isJoystickActive ? getCSSVar('--success-button') : getCSSVar('--accent-primary-dark');
     joystickCtx.fill();
-    joystickCtx.strokeStyle = isJoystickActive ? '#14892c' : '#007acc';
+    joystickCtx.strokeStyle = isJoystickActive ? getCSSVar('--success-border') : getCSSVar('--accent-primary');
     joystickCtx.lineWidth = 2;
     joystickCtx.stroke();
 }
@@ -1039,4 +1042,11 @@ document.addEventListener('DOMContentLoaded', () => {
         addLog('Application started', 'info');
         addLog('Equipment Control Panel ready', 'success');
     }
+
+    // Listen for theme changes to redraw canvas
+    window.addEventListener('themeChanged', () => {
+        if (joystickCanvas && joystickCtx) {
+            drawJoystick();
+        }
+    });
 });

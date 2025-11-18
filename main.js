@@ -6,6 +6,7 @@ let mainWindow;
 let settingsWindow = null;
 let tcpClient = null;
 let isConnected = false;
+let currentTheme = 'dark'; // Store current theme globally
 
 // Int2Byte conversion function
 function Int2Byte(i) {
@@ -67,6 +68,17 @@ function createSettingsWindow() {
 
 app.whenReady().then(() => {
     createWindow();
+
+    // Load saved theme from localStorage after window is created
+    mainWindow.webContents.once('did-finish-load', () => {
+        mainWindow.webContents.executeJavaScript('localStorage.getItem("theme")')
+            .then(savedTheme => {
+                if (savedTheme) {
+                    currentTheme = savedTheme;
+                }
+            })
+            .catch(err => console.error('Failed to load theme:', err));
+    });
 
     app.on('activate', function () {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -247,4 +259,18 @@ ipcMain.handle('window-maximize', () => {
 
 ipcMain.handle('window-close', () => {
     mainWindow.close();
+});
+
+// Theme Management Handlers
+ipcMain.handle('set-theme', async (event, theme) => {
+    currentTheme = theme;
+    // Broadcast theme change to all windows
+    BrowserWindow.getAllWindows().forEach(win => {
+        win.webContents.send('theme-changed', theme);
+    });
+    return { success: true };
+});
+
+ipcMain.handle('get-theme', async () => {
+    return currentTheme;
 });

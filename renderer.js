@@ -15,6 +15,8 @@ let isConnected = false;
 let autoSendInterval = null;
 const AUTO_SEND_RATE = 50; // 50Hz = 20ms interval
 let currentCommand = 0; // Track current command value for int-9
+let waitingForAcknowledgment = false; // Track if we're waiting for PLC acknowledgment
+let acknowledgedCommand = 0; // Track the last acknowledged command for joystick/slider
 
 // Joystick and slider control variables
 let joystickCanvas = null;
@@ -416,6 +418,20 @@ function initializeCommandButtons() {
             // Add active class to clicked button
             btn.classList.add('active-command');
 
+            // Disable all command buttons except the clicked one while waiting for acknowledgment
+            commandButtons.forEach(b => {
+                if (b !== btn) {
+                    b.disabled = true;
+                }
+            });
+
+            // Set waiting state and show loading icon
+            waitingForAcknowledgment = true;
+            const loadingIcon = document.getElementById('cmd-loading-icon');
+            if (loadingIcon) {
+                loadingIcon.style.display = 'inline-block';
+            }
+
             // Update the current command value (will be sent in next 50Hz cycle)
             currentCommand = commandId;
 
@@ -431,26 +447,51 @@ function initializeCommandButtons() {
                 cmdDisplay.textContent = `${commandId} - ${commandName}`;
             }
 
-            addLog(`Command set: ${commandName} (ID: ${commandId}) - will send at 50Hz`, 'success');
+            addLog(`Command set: ${commandName} (ID: ${commandId}) - waiting for acknowledgment...`, 'success');
         });
     });
 }
 
 // Handle PLC command acknowledgment
-function handleCommandAcknowledgment(acknowledgedCommand) {
+function handleCommandAcknowledgment(acknowledgedCmd) {
     // Axis movement commands (joystick/slider): 7-12
-    const isAxisMovementCommand = acknowledgedCommand >= COMMANDS.X_PLUS &&
-                                   acknowledgedCommand <= COMMANDS.Z_MINUS;
+    const isAxisMovementCommand = acknowledgedCmd >= COMMANDS.X_PLUS &&
+                                   acknowledgedCmd <= COMMANDS.Z_MINUS;
 
     if (isAxisMovementCommand) {
-        // For axis movement, just highlight the current inputting widget
-        // The joystick/slider is already highlighted, so we don't need to do anything
-        // Just log the acknowledgment
-        addLog(`PLC acknowledged: ${getCommandName(acknowledgedCommand)}`, 'info');
+        // For axis movement, just log the acknowledgment and update the acknowledged command
+        // This will trigger the visual highlighting in joystick/slider
+        acknowledgedCommand = acknowledgedCmd;
+        addLog(`PLC acknowledged: ${getCommandName(acknowledgedCmd)}`, 'info');
+
+        // Update joystick status highlighting and redraw
+        if (isJoystickActive) {
+            updateJoystickStatus(acknowledgedCmd);
+            if (joystickCtx && joystickCanvas) {
+                drawJoystick();
+            }
+        }
+
+        // Update slider status highlighting
+        if (isSliderActive) {
+            updateSliderStatus(acknowledgedCmd);
+        }
     } else {
         // For button commands, clear the highlight and reset command
         const commandButtons = document.querySelectorAll('.btn-command');
         commandButtons.forEach(btn => btn.classList.remove('active-command'));
+
+        // Re-enable all command buttons
+        commandButtons.forEach(btn => btn.disabled = false);
+
+        // Hide loading icon
+        const loadingIcon = document.getElementById('cmd-loading-icon');
+        if (loadingIcon) {
+            loadingIcon.style.display = 'none';
+        }
+
+        // Clear waiting state
+        waitingForAcknowledgment = false;
 
         // Reset current command to zero
         currentCommand = 0;
@@ -467,7 +508,7 @@ function handleCommandAcknowledgment(acknowledgedCommand) {
             cmdDisplay.textContent = '0 - None';
         }
 
-        addLog(`PLC acknowledged and completed: ${getCommandName(acknowledgedCommand)}`, 'success');
+        addLog(`PLC acknowledged and completed: ${getCommandName(acknowledgedCmd)}`, 'success');
     }
 }
 
@@ -721,6 +762,9 @@ function drawJoystick() {
     const handleX = centerX + joystickPosition.x * (JOYSTICK_RADIUS - JOYSTICK_HANDLE_RADIUS);
     const handleY = centerY - joystickPosition.y * (JOYSTICK_RADIUS - JOYSTICK_HANDLE_RADIUS); // Invert Y for canvas
 
+    // Check if current command is acknowledged
+    const isAcknowledged = isJoystickActive && (currentCommand === acknowledgedCommand) && (acknowledgedCommand !== 0);
+
     // Draw line from center to handle if active
     if (isJoystickActive) {
         joystickCtx.beginPath();
@@ -731,12 +775,12 @@ function drawJoystick() {
         joystickCtx.stroke();
     }
 
-    // Draw handle (joystick knob)
+    // Draw handle (joystick knob) - only show green if acknowledged
     joystickCtx.beginPath();
     joystickCtx.arc(handleX, handleY, JOYSTICK_HANDLE_RADIUS, 0, 2 * Math.PI);
-    joystickCtx.fillStyle = isJoystickActive ? getCSSVar('--success-button') : getCSSVar('--accent-primary-dark');
+    joystickCtx.fillStyle = isAcknowledged ? getCSSVar('--success-button') : getCSSVar('--accent-primary-dark');
     joystickCtx.fill();
-    joystickCtx.strokeStyle = isJoystickActive ? getCSSVar('--success-border') : getCSSVar('--accent-primary');
+    joystickCtx.strokeStyle = isAcknowledged ? getCSSVar('--success-border') : getCSSVar('--accent-primary');
     joystickCtx.lineWidth = 2;
     joystickCtx.stroke();
 }
@@ -802,7 +846,9 @@ function updateJoystickStatus(command) {
     joystickStatus.textContent = commandNames[command] || 'Inactive';
     const statusContainer = joystickStatus.parentElement;
 
-    if (command !== 0) {
+    // Only show active state (green) if command is acknowledged
+    const isAcknowledged = (command !== 0) && (command === acknowledgedCommand);
+    if (isAcknowledged) {
         statusContainer.classList.add('active');
     } else {
         statusContainer.classList.remove('active');
@@ -822,10 +868,20 @@ function updateSliderStatus(command) {
     sliderStatus.textContent = commandNames[command] || 'Inactive';
     const statusContainer = sliderStatus.parentElement;
 
-    if (command !== 0) {
+    // Only show active state (green) if command is acknowledged
+    const isAcknowledged = (command !== 0) && (command === acknowledgedCommand);
+    if (isAcknowledged) {
         statusContainer.classList.add('active');
+        // Add acknowledged class to slider for styling
+        if (zSlider) {
+            zSlider.classList.add('slider-acknowledged');
+        }
     } else {
         statusContainer.classList.remove('active');
+        // Remove acknowledged class from slider
+        if (zSlider) {
+            zSlider.classList.remove('slider-acknowledged');
+        }
     }
 }
 
@@ -865,6 +921,7 @@ function handleJoystickMouseMove(e) {
     // Only update if command changed
     if (currentCommand !== command) {
         currentCommand = command;
+        acknowledgedCommand = 0; // Clear acknowledgment for new command
         updateJoystickStatus(command);
         updateCurrentCommandDisplay(command);
 
@@ -883,6 +940,7 @@ function handleJoystickMouseUp() {
     isJoystickActive = false;
     joystickPosition = { x: 0, y: 0 };
     currentCommand = 0;
+    acknowledgedCommand = 0; // Clear acknowledged command
 
     updateJoystickStatus(0);
     updateCurrentCommandDisplay(0);
@@ -898,6 +956,7 @@ function resetSlider() {
     isSliderActive = false;
     zSlider.value = 0;
     currentCommand = 0;
+    acknowledgedCommand = 0; // Clear acknowledged command
     updateSliderStatus(0);
     updateCurrentCommandDisplay(0);
 }
@@ -922,6 +981,11 @@ function handleSliderInput(e) {
         isSliderActive = true;
     } else {
         isSliderActive = false;
+    }
+
+    // Clear acknowledgment if command changed
+    if (currentCommand !== command) {
+        acknowledgedCommand = 0;
     }
 
     currentCommand = command;

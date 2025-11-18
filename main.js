@@ -1,7 +1,8 @@
+//This is a multi-window Electron app. Any settings/state changes must sync across all windows via IPC. 
+// Check for existing windows and implement synchronization from the start.
 const { app, BrowserWindow, ipcMain } = require('electron');
 const net = require('net');
 const path = require('path');
-
 let mainWindow;
 let settingsWindow = null;
 let tcpClient = null;

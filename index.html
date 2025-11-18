@@ -77,13 +77,12 @@
         <div class="tab-content active" id="tab-commands">
         <div class="section commands-section">
             <h2>Control Commands</h2>
-            <p class="current-command-display">Current Command: <span id="current-cmd-display">0 - None</span></p>
+            <p class="current-command-display">Current Command: <span id="current-cmd-display">0 - None</span><span id="cmd-loading-icon" class="cmd-loading-icon" style="display: none;">⏳</span></p>
 
             <!-- System Control -->
             <div class="command-group">
                 <h3>System Control</h3>
                 <div class="commands-grid-group">
-                    <button class="btn btn-command" data-cmd="0" data-name="Direct Response" disabled>Direct Response</button>
                     <button class="btn btn-command btn-start" data-cmd="1" data-name="Start Experiment" disabled>Start Experiment</button>
                     <button class="btn btn-command btn-stop" data-cmd="2" data-name="Stop Experiment" disabled>Stop Experiment</button>
                     <button class="btn btn-command" data-cmd="30" data-name="Clear Faults" disabled>Clear Faults</button>

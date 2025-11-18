@@ -1,5 +1,6 @@
 // Settings Manager - Handles localStorage operations
-
+// This is a multi-window Electron app. Any settings/state changes must sync across all windows via IPC. 
+// Check for existing windows and implement synchronization from the start.
 class SettingsManager {
     constructor() {
         this.STORAGE_KEYS = {

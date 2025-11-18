@@ -783,6 +783,17 @@ h3 {
     transition: color 0.3s;
 }
 
+.cmd-loading-icon {
+    margin-left: 8px;
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Command Buttons Grid */
 .commands-grid {
     display: grid;
@@ -1036,7 +1047,7 @@ h3 {
     background: var(--accent-primary-hover);
 }
 
-.z-slider::-webkit-slider-thumb:active {
+.z-slider.slider-acknowledged::-webkit-slider-thumb {
     background: var(--success-button);
     border-color: var(--success-border);
 }
@@ -1055,7 +1066,7 @@ h3 {
     background: var(--accent-primary-hover);
 }
 
-.z-slider::-moz-range-thumb:active {
+.z-slider.slider-acknowledged::-moz-range-thumb {
     background: var(--success-button);
     border-color: var(--success-border);
 }

@@ -92,11 +92,29 @@
             <!-- Power Control -->
             <div class="command-group">
                 <h3>Power & Servo Control</h3>
-                <div class="commands-grid-group">
-                    <button class="btn btn-command" data-cmd="3" data-name="Driver Power ON" disabled>Driver Power ON</button>
-                    <button class="btn btn-command" data-cmd="4" data-name="Driver Power OFF" disabled>Driver Power OFF</button>
-                    <button class="btn btn-command" data-cmd="5" data-name="Servo Module ON" disabled>Servo Module ON</button>
-                    <button class="btn btn-command" data-cmd="6" data-name="Servo Module OFF" disabled>Servo Module OFF</button>
+                <div class="power-switches-container">
+                    <div class="switch-group" id="driver-power-switch-group">
+                        <label class="switch-label">Driver Power</label>
+                        <div class="switch-wrapper">
+                            <span class="switch-state-label">OFF</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="driver-power-switch" data-cmd-on="3" data-cmd-off="4" data-name="Driver Power" disabled>
+                                <span class="slider-switch"></span>
+                            </label>
+                            <span class="switch-state-label">ON</span>
+                        </div>
+                    </div>
+                    <div class="switch-group" id="servo-module-switch-group">
+                        <label class="switch-label">Servo Module</label>
+                        <div class="switch-wrapper">
+                            <span class="switch-state-label">OFF</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="servo-module-switch" data-cmd-on="5" data-cmd-off="6" data-name="Servo Module" disabled>
+                                <span class="slider-switch"></span>
+                            </label>
+                            <span class="switch-state-label">ON</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 

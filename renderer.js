@@ -172,6 +172,8 @@ function isMainWindow() {
 function updateConnectionStatus(connected) {
     isConnected = connected;
     const commandButtons = document.querySelectorAll('.btn-command');
+    const driverSwitch = document.getElementById('driver-power-switch');
+    const servoSwitch = document.getElementById('servo-module-switch');
 
     if (connected) {
         if (statusIndicator) {
@@ -182,6 +184,9 @@ function updateConnectionStatus(connected) {
         if (disconnectBtn) disconnectBtn.disabled = false;
         if (sendBtn) sendBtn.disabled = false;
         commandButtons.forEach(btn => btn.disabled = false);
+
+        // Enable power switches
+        enablePowerSwitches();
 
         // Enable joystick and slider controls
         if (joystickCanvas) {
@@ -207,6 +212,20 @@ function updateConnectionStatus(connected) {
         if (disconnectBtn) disconnectBtn.disabled = true;
         if (sendBtn) sendBtn.disabled = true;
         commandButtons.forEach(btn => btn.disabled = true);
+
+        // Disable power switches
+        if (driverSwitch) driverSwitch.disabled = true;
+        if (servoSwitch) servoSwitch.disabled = true;
+        const driverGroup = document.getElementById('driver-power-switch-group');
+        const servoGroup = document.getElementById('servo-module-switch-group');
+        if (driverGroup) {
+            driverGroup.classList.add('disabled');
+            driverGroup.classList.remove('waiting-ack');
+        }
+        if (servoGroup) {
+            servoGroup.classList.add('disabled');
+            servoGroup.classList.remove('waiting-ack');
+        }
 
         // Disable joystick and slider controls
         if (joystickCanvas) {
@@ -425,6 +444,9 @@ function initializeCommandButtons() {
                 }
             });
 
+            // Disable power switches while waiting for acknowledgment
+            disablePowerSwitches();
+
             // Set waiting state and show loading icon
             waitingForAcknowledgment = true;
             const loadingIcon = document.getElementById('cmd-loading-icon');
@@ -452,6 +474,167 @@ function initializeCommandButtons() {
     });
 }
 
+// Power switch handlers - will be initialized on DOMContentLoaded
+function initializePowerSwitches() {
+    const driverSwitch = document.getElementById('driver-power-switch');
+    const servoSwitch = document.getElementById('servo-module-switch');
+
+    // Only initialize if switches exist (may not exist in settings window)
+    if (!driverSwitch || !servoSwitch) {
+        return;
+    }
+
+    // Driver Power Switch handler
+    driverSwitch.addEventListener('change', (e) => {
+        if (!isConnected) {
+            addLog('Not connected to server', 'error');
+            // Revert the switch
+            e.target.checked = !e.target.checked;
+            return;
+        }
+
+        const isOn = e.target.checked;
+        const commandId = parseInt(isOn ? e.target.dataset.cmdOn : e.target.dataset.cmdOff);
+        const commandName = `${e.target.dataset.name} ${isOn ? 'ON' : 'OFF'}`;
+
+        // Disable all command buttons while waiting for acknowledgment
+        const commandButtons = document.querySelectorAll('.btn-command');
+        commandButtons.forEach(btn => btn.disabled = true);
+
+        // Disable the other switch
+        servoSwitch.disabled = true;
+        const servoGroup = document.getElementById('servo-module-switch-group');
+        if (servoGroup) {
+            servoGroup.classList.add('disabled');
+        }
+
+        // Mark this switch group as waiting for acknowledgment
+        const driverGroup = document.getElementById('driver-power-switch-group');
+        if (driverGroup) {
+            driverGroup.classList.add('waiting-ack');
+        }
+
+        // Set waiting state and show loading icon
+        waitingForAcknowledgment = true;
+        const loadingIcon = document.getElementById('cmd-loading-icon');
+        if (loadingIcon) {
+            loadingIcon.style.display = 'inline-block';
+        }
+
+        // Update the current command value (will be sent in next 50Hz cycle)
+        currentCommand = commandId;
+
+        // Update int-9 display immediately
+        const commandInput = document.getElementById('int-9');
+        if (commandInput) {
+            commandInput.value = commandId;
+        }
+
+        // Update current command display
+        const cmdDisplay = document.getElementById('current-cmd-display');
+        if (cmdDisplay) {
+            cmdDisplay.textContent = `${commandId} - ${commandName}`;
+        }
+
+        addLog(`Command set: ${commandName} (ID: ${commandId}) - waiting for acknowledgment...`, 'success');
+    });
+
+    // Servo Module Switch handler
+    servoSwitch.addEventListener('change', (e) => {
+        if (!isConnected) {
+            addLog('Not connected to server', 'error');
+            // Revert the switch
+            e.target.checked = !e.target.checked;
+            return;
+        }
+
+        const isOn = e.target.checked;
+        const commandId = parseInt(isOn ? e.target.dataset.cmdOn : e.target.dataset.cmdOff);
+        const commandName = `${e.target.dataset.name} ${isOn ? 'ON' : 'OFF'}`;
+
+        // Disable all command buttons while waiting for acknowledgment
+        const commandButtons = document.querySelectorAll('.btn-command');
+        commandButtons.forEach(btn => btn.disabled = true);
+
+        // Disable the other switch
+        driverSwitch.disabled = true;
+        const driverGroup = document.getElementById('driver-power-switch-group');
+        if (driverGroup) {
+            driverGroup.classList.add('disabled');
+        }
+
+        // Mark this switch group as waiting for acknowledgment
+        const servoGroup = document.getElementById('servo-module-switch-group');
+        if (servoGroup) {
+            servoGroup.classList.add('waiting-ack');
+        }
+
+        // Set waiting state and show loading icon
+        waitingForAcknowledgment = true;
+        const loadingIcon = document.getElementById('cmd-loading-icon');
+        if (loadingIcon) {
+            loadingIcon.style.display = 'inline-block';
+        }
+
+        // Update the current command value (will be sent in next 50Hz cycle)
+        currentCommand = commandId;
+
+        // Update int-9 display immediately
+        const commandInput = document.getElementById('int-9');
+        if (commandInput) {
+            commandInput.value = commandId;
+        }
+
+        // Update current command display
+        const cmdDisplay = document.getElementById('current-cmd-display');
+        if (cmdDisplay) {
+            cmdDisplay.textContent = `${commandId} - ${commandName}`;
+        }
+
+        addLog(`Command set: ${commandName} (ID: ${commandId}) - waiting for acknowledgment...`, 'success');
+    });
+}
+
+// Helper function to disable power switches
+function disablePowerSwitches() {
+    const driverSwitch = document.getElementById('driver-power-switch');
+    const servoSwitch = document.getElementById('servo-module-switch');
+    const driverGroup = document.getElementById('driver-power-switch-group');
+    const servoGroup = document.getElementById('servo-module-switch-group');
+
+    if (driverSwitch) {
+        driverSwitch.disabled = true;
+        if (driverGroup) driverGroup.classList.add('disabled');
+    }
+    if (servoSwitch) {
+        servoSwitch.disabled = true;
+        if (servoGroup) servoGroup.classList.add('disabled');
+    }
+}
+
+// Helper function to enable power switches
+function enablePowerSwitches() {
+    const driverSwitch = document.getElementById('driver-power-switch');
+    const servoSwitch = document.getElementById('servo-module-switch');
+    const driverGroup = document.getElementById('driver-power-switch-group');
+    const servoGroup = document.getElementById('servo-module-switch-group');
+
+    if (driverSwitch && isConnected) {
+        driverSwitch.disabled = false;
+        if (driverGroup) {
+            driverGroup.classList.remove('disabled');
+            driverGroup.classList.remove('waiting-ack');
+        }
+    }
+    if (servoSwitch && isConnected) {
+        servoSwitch.disabled = false;
+        if (servoGroup) {
+            servoGroup.classList.remove('disabled');
+            servoGroup.classList.remove('waiting-ack');
+        }
+    }
+}
+
 // Handle PLC command acknowledgment
 function handleCommandAcknowledgment(acknowledgedCmd) {
     // Axis movement commands (joystick/slider): 7-12
@@ -477,12 +660,15 @@ function handleCommandAcknowledgment(acknowledgedCmd) {
             updateSliderStatus(acknowledgedCmd);
         }
     } else {
-        // For button commands, clear the highlight and reset command
+        // For button commands and power switches, clear the highlight and reset command
         const commandButtons = document.querySelectorAll('.btn-command');
         commandButtons.forEach(btn => btn.classList.remove('active-command'));
 
         // Re-enable all command buttons
         commandButtons.forEach(btn => btn.disabled = false);
+
+        // Re-enable power switches
+        enablePowerSwitches();
 
         // Hide loading icon
         const loadingIcon = document.getElementById('cmd-loading-icon');
@@ -1009,12 +1195,25 @@ function handleSliderChange(e) {
 // Get command name for logging
 function getCommandName(command) {
     const names = {
+        1: 'Start Experiment',
+        2: 'Stop Experiment',
+        3: 'Driver Power ON',
+        4: 'Driver Power OFF',
+        5: 'Servo Module ON',
+        6: 'Servo Module OFF',
         [COMMANDS.X_PLUS]: 'X+ Move',
         [COMMANDS.X_MINUS]: 'X- Move',
         [COMMANDS.Y_PLUS]: 'Y+ Move',
         [COMMANDS.Y_MINUS]: 'Y- Move',
         [COMMANDS.Z_PLUS]: 'Z+ Move',
         [COMMANDS.Z_MINUS]: 'Z- Move',
+        18: 'Stop Z-axis',
+        19: 'STOP XYZ',
+        20: 'XY Position Move',
+        21: 'Precision Align',
+        22: 'Tension Setting',
+        23: 'Emergency Stop',
+        30: 'Clear Faults',
         0: 'None'
     };
     return names[command] || 'Unknown';
@@ -1090,6 +1289,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize only the components that exist in this window
     initializeDisplays();
     initializeCommandButtons();
+    initializePowerSwitches(); // Initialize power switches
     initializeTabs();
     initializeSettingsButton();
     initializeWindowControls();

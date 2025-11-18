@@ -1,8 +1,8 @@
-# Equipment Control Panel
+# Control Panel for Gravity Reduce
 
-An Electron-based Windows desktop application for equipment control and monitoring via TCP communication. Features automatic 50Hz data transmission with 67 communication variables.
+An Electron-based Windows desktop application for gravity reducing equipment control and monitoring via custom TCP communication. Features automatic 50Hz data transmission with 67 communication variables with a SIEMENS S7-1200 PLC
 
-## Features
+##. Features
 
 - **50Hz Auto-Send (MAIN FUNCTION)**: Automatic continuous transmission of 16 control parameters at 50Hz (20ms interval)
 - **Control Parameters**: 16 integers including Speed Mode, Target Speed, Position (X/Y/Z), Operation Mode, and Control Commands
@@ -27,11 +27,12 @@ Each integer (0-65535) is converted to 2 bytes, so 16 integers = 32 bytes sent.
 
 ### Sent Data (32 bytes)
 - 16 integers × 2 bytes each = 32 bytes total
-- Big-endian format (MSB first)
+- Big-endian format ( MSB first )
 
-### Received Data (60 bytes expected)
-- **Bytes 0-39**: 40 boolean values (1 byte each, 0 = false, non-zero = true)
-- **Bytes 40-59**: 10 integers (2 bytes each, big-endian format)
+### Received Data (26 bytes expected)
+- **Bytes 0-4**: 40 boolean values ( 8 bools in 1 byte, `0xe = false, false, false, true` )
+- **Bytes 5**: undefined Byte spared automatically by Siemens PLC.
+- **Bytes 6-25**: 10 integers ( 2 bytes each, big-endian format )
 
 ## Installation
 
@@ -41,8 +42,26 @@ npm install
 
 ## Running the Application
 
+- **If you need a test server**:
+  
+```bash
+node test-server.js
+```
+
 ```bash
 npm start
+```
+
+- If you **DON'T** need a test server:
+
+```bash
+npm start
+```
+
+## Build
+
+```bash
+npm run build
 ```
 
 ## Usage
@@ -58,7 +77,7 @@ npm start
    - **Target Speed** (mm/s): Set movement speed
    - **Target X/Y/Z** (mm): Set position coordinates
    - **Operation Mode**: Select PID parameter set
-   - **Control Command**: Automatically updated when command buttons are pressed
+   - **Control Command**: Automatically updated when command buttons are pressed and read the acknowledge to automatically switch to 0
 
 3. **Command Buttons**:
    - Press any command button to set the Control Command value
@@ -79,7 +98,11 @@ npm start
 
 ## Testing the Application
 
-A test TCP server is included (`test-server.js`) that echoes back test data:
+A test TCP server is included (`test-server.js`) that simulates PLC behavior:
+- Generates realistic 40 boolean and 10 integer responses
+- Simulates command processing delay (~200ms at 50Hz)
+- Echoes back control commands in the 10th integer to test acknowledgment logic
+- Uses proper bit-packed boolean format (5 bytes + 1 padding byte)
 
 ```bash
 node test-server.js
@@ -90,13 +113,23 @@ Then connect the Electron app to `localhost:8080`.
 ## File Structure
 
 ```
-├── main.js         # Main Electron process with TCP client
-├── preload.js      # IPC communication bridge
-├── renderer.js     # UI logic and event handlers
-├── index.html      # Application UI structure
-├── styles.css      # Styling and layout
-├── package.json    # Project configuration
-└── README.md       # This file
+├── main.js                    # Main Electron process and TCP connection handler
+├── preload.js                 # IPC communication bridge (secure context isolation)
+├── renderer.js                # Main UI logic, event handlers, and command management
+├── renderer-refactored.js     # Refactored modular renderer (alternative implementation)
+├── index.html                 # Main application UI structure
+├── settings.html              # Settings window UI
+├── styles.css                 # Application styling and 16:9 layout
+├── config.js                  # Application configuration and constants
+├── connection-manager.js      # TCP connection management module
+├── data-handler.js            # Data collection and formatting module
+├── ui-manager.js              # UI updates and display management module
+├── settings-manager.js        # Settings persistence (localStorage) module
+├── validation.js              # Input validation module
+├── test-server.js             # TCP test server (simulates PLC with command acknowledgment)
+├── package.json               # Project configuration and dependencies
+├── README.md                  # This file
+└── REFACTORING_SUMMARY.md     # Modular architecture documentation
 ```
 
 ## Key Implementation Details
@@ -113,29 +146,13 @@ Then connect the Electron app to `localhost:8080`.
 - Commands are integrated into the continuous 50Hz data stream
 - This ensures synchronized control parameter and command transmission
 
+### PLC Command Acknowledgment
+- The PLC echoes back the control command in the 10th received integer (index 9)
+- **Button Commands**: Automatically cleared when PLC acknowledges (button highlight removed, command reset to 0)
+- **Axis Movement Commands** (X+/X-/Y+/Y-/Z+/Z-): Keep control highlighted while active
+- Provides visual feedback that commands have been received and executed by the PLC
+
 ### Customization
 - Boolean/Integer labels can be modified in `initializeDisplays()` function in `renderer.js`
 - Data protocol can be adjusted in `parseReceivedData()` in `main.js`
 - Command mappings can be updated in the HTML `data-cmd` attributes
-
-## Security Notes
-
-- The application runs with `contextIsolation: true` for security
-- Node.js integration is disabled in the renderer process
-- All IPC communication goes through the secure preload script
-
-## Troubleshooting
-
-**Connection Timeout**:
-- Verify the server is running and accessible
-- Check firewall settings
-- Ensure correct host and port
-
-**Data Not Displaying**:
-- Check the log for error messages
-- Verify the server is sending data in the expected format (60 bytes)
-- Open DevTools (automatically opened) to check console errors
-
-**Values Out of Range**:
-- Integer inputs are automatically clamped to 0-65535 range
-- Check logs for clamping notifications

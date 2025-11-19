@@ -113,6 +113,9 @@ const LOCALES = {
         customParam3: 'Custom Param 3:',
         customParam4: 'Custom Param 4:',
         customParam5: 'Custom Param 5:',
+        communicationControl: 'Communication & Control',
+        commFlag: 'Comm Flag:',
+        controlCommand: 'Control Command:',
 
         // Command names
         commands: {
@@ -249,6 +252,9 @@ const LOCALES = {
         customParam3: '自定义参数3:',
         customParam4: '自定义参数4:',
         customParam5: '自定义参数5:',
+        communicationControl: '通信与控制',
+        commFlag: '通信标志:',
+        controlCommand: '控制命令:',
 
         // Command names
         commands: {

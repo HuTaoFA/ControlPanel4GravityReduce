@@ -91,6 +91,9 @@ function applyLanguage(lang) {
     // Update language toggle button text
     updateLanguageToggleButton(lang);
 
+    // Dispatch custom event for components that need to reinitialize
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
+
     isUpdating = false;
 }
 

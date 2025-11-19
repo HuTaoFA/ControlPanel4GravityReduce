@@ -1299,11 +1299,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Listen for language changes from other windows
+    // Listen for language changes from other windows (via IPC)
     if (window.electronAPI && window.electronAPI.onLanguageChanged) {
         window.electronAPI.onLanguageChanged(() => {
             // Reinitialize displays with new language
             initializeDisplays();
         });
     }
+
+    // Listen for language changes in the same window (via custom event)
+    window.addEventListener('languageChanged', () => {
+        // Reinitialize displays with new language
+        initializeDisplays();
+    });
 });

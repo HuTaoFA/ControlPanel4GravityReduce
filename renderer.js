@@ -887,8 +887,8 @@ window.addEventListener('storage', (e) => {
 
 // ========== JOYSTICK AND SLIDER CONTROLS ==========
 
-const JOYSTICK_RADIUS = 100;
-const JOYSTICK_HANDLE_RADIUS = 30;
+const JOYSTICK_RADIUS = 80;
+const JOYSTICK_HANDLE_RADIUS = 24;
 const JOYSTICK_DEADZONE = 0.3; // 30% deadzone in center
 
 // Command mappings

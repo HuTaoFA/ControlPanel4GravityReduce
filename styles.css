@@ -737,11 +737,24 @@ h3 {
     background: var(--scrollbar-thumb-hover);
 }
 
+/* Two Column Layout for Commands */
+.commands-two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.commands-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 /* Command Groups */
 .command-group {
-    margin-bottom: 20px;
+    margin-bottom: 0;
     background: var(--bg-primary);
-    padding: 15px;
+    padding: 12px;
     border-radius: 3px;
     border: 1px solid var(--border-primary);
     transition: background-color 0.3s, border-color 0.3s;
@@ -749,18 +762,18 @@ h3 {
 
 .command-group h3 {
     color: var(--text-primary);
-    margin-bottom: 12px;
-    font-size: 1.1em;
+    margin-bottom: 10px;
+    font-size: 1em;
     font-weight: 400;
     border-bottom: 1px solid var(--border-primary);
-    padding-bottom: 6px;
+    padding-bottom: 5px;
     transition: color 0.3s, border-color 0.3s;
 }
 
 .commands-grid-group {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
 }
 
 /* Current Command Display */
@@ -804,9 +817,9 @@ h3 {
 .btn-command {
     background: var(--accent-primary-dark);
     color: white;
-    padding: 10px 8px;
-    font-size: 12px;
-    min-height: 45px;
+    padding: 8px 6px;
+    font-size: 11px;
+    min-height: 38px;
     position: relative;
     transition: background-color 0.3s;
 }
@@ -872,7 +885,7 @@ h3 {
 /* Axis Controls Container */
 .axis-controls-container {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -884,7 +897,7 @@ h3 {
     flex-direction: column;
     align-items: center;
     background: var(--bg-tertiary);
-    padding: 20px;
+    padding: 12px;
     border-radius: 5px;
     border: 1px solid var(--border-primary);
     transition: background-color 0.3s, border-color 0.3s;
@@ -892,17 +905,20 @@ h3 {
 
 .joystick-container h4 {
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     transition: color 0.3s;
 }
 
 .joystick-wrapper {
     position: relative;
-    width: 200px;
-    height: 200px;
-    margin-bottom: 15px;
+    width: 160px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 19px 0;
 }
 
 #joystick-canvas {
@@ -929,44 +945,44 @@ h3 {
 
 .joystick-labels span {
     position: absolute;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--text-secondary);
     transition: color 0.3s;
 }
 
 .label-top {
-    top: -20px;
+    top: -18px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .label-right {
-    right: -25px;
+    right: -22px;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .label-bottom {
-    bottom: -20px;
+    bottom: -18px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .label-left {
-    left: -25px;
+    left: -22px;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .joystick-status {
-    padding: 6px 12px;
+    padding: 4px 10px;
     background: var(--bg-primary);
     border: 1px solid var(--border-primary);
     border-radius: 3px;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-secondary);
-    min-width: 120px;
+    min-width: 100px;
     text-align: center;
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
@@ -983,7 +999,7 @@ h3 {
     flex-direction: column;
     align-items: center;
     background: var(--bg-tertiary);
-    padding: 20px;
+    padding: 12px;
     border-radius: 5px;
     border: 1px solid var(--border-primary);
     transition: background-color 0.3s, border-color 0.3s;
@@ -991,9 +1007,9 @@ h3 {
 
 .slider-container h4 {
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     transition: color 0.3s;
 }
 
@@ -1001,13 +1017,13 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 .slider-label-top,
 .slider-label-bottom {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--text-secondary);
     transition: color 0.3s;
@@ -1016,11 +1032,11 @@ h3 {
 .z-slider {
     -webkit-appearance: slider-vertical;
     writing-mode: bt-lr;
-    width: 40px;
-    height: 200px;
+    width: 36px;
+    height: 160px;
     background: var(--bg-primary);
     border: 2px solid var(--border-primary);
-    border-radius: 20px;
+    border-radius: 18px;
     outline: none;
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s;
@@ -1034,8 +1050,8 @@ h3 {
 .z-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
     background: var(--accent-primary-dark);
     border-radius: 50%;
     cursor: pointer;
@@ -1053,8 +1069,8 @@ h3 {
 }
 
 .z-slider::-moz-range-thumb {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
     background: var(--accent-primary-dark);
     border-radius: 50%;
     cursor: pointer;
@@ -1072,13 +1088,13 @@ h3 {
 }
 
 .slider-status {
-    padding: 6px 12px;
+    padding: 4px 10px;
     background: var(--bg-primary);
     border: 1px solid var(--border-primary);
     border-radius: 3px;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-secondary);
-    min-width: 120px;
+    min-width: 100px;
     text-align: center;
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
@@ -1092,24 +1108,24 @@ h3 {
 /* Power Switches Container */
 .power-switches-container {
     display: flex;
-    gap: 30px;
+    gap: 15px;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    padding: 10px;
+    padding: 5px;
 }
 
 .switch-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     background: var(--bg-tertiary);
-    padding: 20px 30px;
+    padding: 12px 18px;
     border-radius: 5px;
     border: 1px solid var(--border-primary);
     transition: background-color 0.3s, border-color 0.3s, opacity 0.3s;
-    min-width: 220px;
+    min-width: 180px;
 }
 
 .switch-group.disabled {
@@ -1123,7 +1139,7 @@ h3 {
 }
 
 .switch-label {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--text-primary);
     transition: color 0.3s;
@@ -1149,8 +1165,8 @@ h3 {
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 32px;
+    width: 50px;
+    height: 26px;
     cursor: pointer;
 }
 
@@ -1169,14 +1185,14 @@ h3 {
     background-color: var(--bg-input);
     border: 2px solid var(--border-primary);
     transition: background-color 0.3s, border-color 0.3s;
-    border-radius: 32px;
+    border-radius: 26px;
 }
 
 .slider-switch:before {
     position: absolute;
     content: "";
-    height: 24px;
-    width: 24px;
+    height: 18px;
+    width: 18px;
     left: 2px;
     bottom: 2px;
     background-color: var(--text-secondary);
@@ -1190,7 +1206,7 @@ h3 {
 }
 
 .toggle-switch input:checked + .slider-switch:before {
-    transform: translateX(28px);
+    transform: translateX(24px);
     background-color: var(--text-bright);
 }
 

@@ -9,7 +9,9 @@
       "Bash(npm run build:*)",
       "Bash(timeout /t 3 /nobreak)",
       "Bash(nul)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(mkdir:*)",
+      "Bash(dir /b \"F:\\Electron\\ControlPanel4GravityReduce\\renderer\" 2)"
     ],
     "deny": [],
     "ask": []
